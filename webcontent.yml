@@ -1,6 +1,6 @@
 ---
 - name: Create web content directory 
-  hosts: webservers
+  hosts: test
   become: yes
   tasks: 
     - name: greate a group
