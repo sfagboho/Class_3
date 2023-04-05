@@ -1,6 +1,6 @@
 ---
 - name: Dowload new_user_list.yml file to the control node
-  hosts: localhost
+  hosts: 192.168.1.60
   gather_facts: False
   connection: local
 
