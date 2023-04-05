@@ -1,0 +1,36 @@
+---
+- name: User and Groups
+  hosts: all 
+  become: yes 
+  vars_files: 
+    - user_list.yml
+    - secret.yml
+  tasks: 
+    - name: create users 
+      ansible.builtin.user: 
+        name: "{{ item.username }}"
+        uid: "{{ item.uid }}"
+        state: present
+        shell: /bin/bash
+        groups: wheel
+        password: "{{ 'user_password' | password_hash('sha512') }}"
+        update_password: on_create
+      when: 
+        - "'webservers' in group_names and item.uid < 2000"
+      with_items: 
+        - "{{ users }}"
+
+    - name: create users
+      ansible.builtin.user: 
+        name: "{{ item.username }}"
+        uid: "{{ item.uid }}"
+        state: present
+        shell: /bin/bash
+        groups: wheel
+        password: "{{ 'user_password' | password_hash('sha512') }}"
+        update_password: on_create
+      when:
+        - "'database' in group_names and item.uid >= 2000"
+      with_items:
+        - "{{ users }}"
+

@@ -1,0 +1,54 @@
+---
+- name: Dowload new_user_list.yml file to the control node
+  hosts: localhost
+  gather_facts: False
+  connection: local
+
+  tasks:
+    - name: dowload the url
+      ansible.builtin.get_url:
+        url: http://rhgls.labx.example.com/materials/ 
+        dest: /home/automation/plays/new_user_list.yml
+      ignore_errors: True
+
+- name: Create the groups and users
+  hosts: all
+  become: true
+  vars_files:
+    - new_user_list.yml
+    - locker.yml
+
+  tasks:
+    - name: Create the groups
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - devops
+        - opsmgr
+
+    - name: Create the users
+      ansible.builtin.user:
+        name: "{{ item.username }}"
+        groups: devops
+        password: "{{ pw_developer | password_hash('sha512') }}"
+        update_password: on_create
+      when:
+        - inventory_hostname in groups['database'] or inventory_hostname in groups['test']        
+        - item.Job == 'developer'
+      loop: "{{ users }}"
+
+
+    - name: Create the users
+      ansible.builtin.user:
+        name: "{{ item.username }}"
+        groups: opsmgr
+        password: "{{ pw_manager | password_hash('sha512') }}"
+        update_password: on_create
+      when: 
+        - inventory_hostname in groups['proxy'] or inventory_hostname in     groups['prod'] 
+        - item.Job == 'manager'
+      loop: "{{ users }}"
+
+  
+        

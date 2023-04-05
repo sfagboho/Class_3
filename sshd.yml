@@ -1,0 +1,19 @@
+---
+- name: Configure ssh server
+  hosts: all
+  become: yes 
+  tasks: 
+    - name: copy 
+      copy: 
+        src: sshd
+        dest: /etc/ssh/sshd_config
+        owner: root
+        group: root
+        backup: yes
+      notify: restarting ssh
+      
+  handlers:
+    - name: restarting ssh 
+      service: 
+        name: sshd
+        state: restarted

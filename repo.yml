@@ -1,0 +1,19 @@
+---
+- name: create a repo 
+  hosts: all
+  become: yes 
+  tasks: 
+    - name: create a repo 
+      ansible.builtin.yum_repository:
+        name: Exam_RHEL
+        description: 'EX407 Software'
+        baseurl: http://rhgls.labx.example.com/rhel
+        enabled: no
+        gpgcheck: yes 
+
+    - name: download the key
+      ansible.builtin.rpm_key:
+        state: present
+        key: http://rhgls.lab.example.com/rhel/RPM-GPG-KEY-redhat-release
+
+

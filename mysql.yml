@@ -1,0 +1,7 @@
+---
+- name: Create and work with role
+  hosts: database 
+  become: yes 
+  vars_files: secret.yml
+  roles: 
+    - roles/sample-mysql

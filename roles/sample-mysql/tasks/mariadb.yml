@@ -1,0 +1,34 @@
+- name: Install pkg
+  yum: 
+    name: 
+      - mariadb-server.x86_64
+      - firewalld
+      - python2-PyMySQL
+    state: present
+
+- name: Allow all traffic
+  firewalld: 
+    port: 3306/tcp
+    immediate: yes 
+    permanent: yes 
+    state: enabled
+
+- name: set password for root
+  mysql_user: 
+    name: root
+    state: present 
+    password: "{{ database_password }}"
+
+- name: started and enabled service 
+  service: 
+   name: mariadb.service
+   state: started
+   enabled: yes 
+   
+- name: genarate mysql config file 
+  template: 
+    src: my.cnf.j2
+    dest: /etc/my.cnf.d/mariadb-server.conf
+    backup: yes 
+  notify: mysql_restarted
+

@@ -1,0 +1,24 @@
+---
+- name: Edit GRUB_CMDLINE_LINUX_DEFAULT in Linux
+  hosts: localhost
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name:
+    lineinfile:
+      dest: grub_defaults 
+      regexp: '^(.*)page_poison=1(.*)$'
+      state: absent
+    check_mode: true
+    changed_when: false
+    register: page_poison
+
+  - name: append page_poison=1 if it was not exist
+    lineinfile:
+     dest: grub_defaults
+     regexp: '^(.*)GRUB_CMDLINE_LINUX="(.*)$'
+     line: '\1GRUB_CMDLINE_LINUX="crashkernel=auto page_poison=1 \2 '
+     backup: yes
+     backrefs: yes
+    when: not page_poison.found

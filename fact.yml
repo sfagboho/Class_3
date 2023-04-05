@@ -1,0 +1,14 @@
+---
+- name: Work with ansible fact
+  hosts: node2
+  become: yes 
+  tasks: 
+    - name: create a dir and send custom file to it 
+      file: 
+        path: /etc/ansible/facts.d
+        state: directory
+    - copy: 
+        src: custom.fact
+        dest: /etc/ansible/facts.d
+      
+

@@ -1,0 +1,20 @@
+---
+- name: Software repository
+  hosts: database
+  become: yes 
+  tasks: 
+    - name: Create a repo 
+      yum_repository: 
+        name: "mysql56-community"
+        description: MySQL 5.6 YUM Repo
+        baseurl: http://repo.mysql.com/yum/mysql-5.6-community/el/7/x86_64/.
+        gpgcheck: yes 
+        enabled: yes 
+        file: mysql.repo
+
+    - name: Downloard the key
+      rpm_key: 
+        state: present 
+        key: http://repo.mysql.com/RPM-GPG-KEY-mysql
+      
+

@@ -1,0 +1,41 @@
+---
+- name: Modify file content
+  become: yes
+  hosts: all 
+  tasks:
+    - name: In proxy 
+      ansible.builtin.replace:
+        path: /etc/issue
+        regexp: '^(.+)$'
+        replace: Proxy
+      when: 
+        - "'proxy' in group_names"
+
+    - name: In test 
+      ansible.builtin.replace:
+        path: /etc/issue
+        regexp: '^(.+)$'
+        replace: Test
+      when: 
+        - "'test' in group_names"
+
+    - name: In database 
+      ansible.builtin.replace:
+        path: /etc/issue
+        regexp: '^(.+)$'
+        replace: database
+      when:
+        - "'database' in group_names"
+
+    - name: webservers
+      ansible.builtin.replace:
+        path: /etc/issue
+        regexp: '^(.+)$'
+        replace: webservers
+      when:
+        - "'webservers' in group_names"
+
+
+
+
+  

@@ -1,0 +1,16 @@
+[test]
+node1
+
+[proxy]
+node2
+
+[webservers]
+node3
+node4
+
+[database]
+node3
+
+[prod:children]
+webservers
+database

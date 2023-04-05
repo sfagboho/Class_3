@@ -1,0 +1,34 @@
+---
+- name: File content
+  hosts: all 
+  become: yes
+  tasks: 
+    - name: Display in proxy group
+      copy: 
+        content: "Welcome to HAproxy server"
+        dest: /etc/motd
+      when: 
+        - inventory_hostname in groups['proxy']
+
+    - name: Display in webserver group
+      copy: 
+        content: "Welcome to Apache server"
+        dest: /etc/motd
+      when: 
+        - "'webservers' in group_names"
+
+    - name:  Display in test group
+      lineinfile:
+        line: "Welcome to test server"
+        path: /etc/motd
+      when: 
+        - "'test' in group_names"
+
+    - name: Display in database group
+      lineinfile: 
+        line: "Welcome to Mysql server"
+        path: /etc/motd
+      when: 
+        - "'database' in group_names"
+
+      

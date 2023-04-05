@@ -1,0 +1,26 @@
+---
+- name: Software pkg
+  hosts: all
+  become: yes 
+  tasks:
+    - name: Install pkg in proxy hosts groups
+      yum: 
+        name:
+          - tcpdump
+          - mailx
+        state: present
+      when: 
+        - inventory_hostname in groups['proxy']
+
+    - name:  Install pkg in database hosts groups
+      yum: 
+        name:
+          - mailx
+          - lsof
+        state: present
+      when: 
+        - inventory_hostname in groups['webservers']
+
+
+
+

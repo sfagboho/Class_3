@@ -1,0 +1,28 @@
+---
+- name: Install packages
+  hosts: all
+  become: yes 
+  tasks: 
+    - name: Install pkg in test and web groups 
+      ansible.builtin.yum:
+        name: 
+          - 'php.x86_64' 
+          - mariadb
+        state: present
+      when:
+        - "'test' in group_names or 'webservers' in group_names"
+
+    - name: install development Tools pkg
+      ansible.builtin.yum:
+        name: "@development"
+        state: present
+      when: 
+        - "'test' in group_names"
+
+    - name: Update all pkg to the latest version
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+      when: 
+        - "'test' in group_names"
+  

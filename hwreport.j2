@@ -1,0 +1,6 @@
+HOSTNAME = {{ ansible_hostname }}
+MEMORY     = {{ ansible_memtotal_mb }}
+B_VERSION = {{ ansible_bios_version }}
+SDA_SIZE    = {{ ansible_devices.sda.size | default('NONE') }}
+SDB_SIZE    = {{ ansible_devices.sdb.size | default('NONE') }}
+

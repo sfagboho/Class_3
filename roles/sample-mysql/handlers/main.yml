@@ -1,0 +1,6 @@
+---
+# handlers file for sample-mysql
+- name: mysql_restarted
+  service: 
+    name: mariadb.service 
+    state: restarted

@@ -1,0 +1,31 @@
+---
+# tasks file for apache
+- name: Install  httpd pkg 
+  ansible.builtin.yum: 
+    name:
+      - httpd 
+      - firewalld 
+    state: present 
+
+- name: Started and enabled httpd 
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes 
+  loop: 
+    - httpd 
+    - firewalld 
+
+- name: Allow acces to web server 
+  ansible.posix.firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+    immediate: yes 
+
+- name: Create a template file 
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html 
+
+  

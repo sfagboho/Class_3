@@ -1,0 +1,16 @@
+---
+- name: Genarate Hardware report
+  hosts: all 
+  become: yes 
+  tasks: 
+    - name: download
+      ansible.builtin.get_url:
+        url: http://rhgls.labx.example.com/materials
+        dest: /root/hwreport.txt
+      delegate_to: localhost
+      ignore_errors: yes 
+
+    - name: Modify /root/hwreport.txt with correct value 
+      ansible.builtin.template:
+        src: hwreport.j2
+        dest: /root/hwreport.txt

@@ -1,0 +1,5 @@
+#- src: http://rhgls.labx.example.com/materials/haproxy.tar
+#  name: balancer
+
+- name: phpinfo 
+  src: davidalger.php_fpm

@@ -1,0 +1,12 @@
+---
+- name: USe RHEL role
+  hosts: all 
+  become: yes
+  roles: 
+    - redhat.rhel_system_roles.timesync
+  vars:
+    timesync_ntp_servers:
+      - hostname: rhel.server.ntp.org 
+        iburst: yes
+    timesync_ntp_provider: chrony
+

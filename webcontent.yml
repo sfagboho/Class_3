@@ -1,0 +1,30 @@
+---
+- name: Create web content directory 
+  hosts: webservers
+  become: yes
+  tasks: 
+    - name: greate a group
+      ansible.builtin.group:
+        name: webdev
+        state: present 
+
+    - name: Create a directory 
+      ansible.builtin.file:
+        path: /webdev
+        state: directory 
+        group: webdev
+        mode: 2775
+
+    - name: Create a synbolic link 
+      ansible.builtin.file:
+        src: /webdev
+        dest: /var/www/html/webdev
+        state: link 
+        force: yes 
+
+    - name: create a file 
+      ansible.builtin.copy:
+        content: 'Development'
+        dest: /var/www/html/webdev/index.hmtl
+
+

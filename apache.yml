@@ -1,0 +1,6 @@
+---
+- name: Use role
+  hosts: webservers
+  become: yes 
+  roles: 
+    - roles/sample-apache

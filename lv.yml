@@ -1,0 +1,64 @@
+---
+- name: Create and Use LVM 
+  hosts: all
+  become: yes
+  tasks: 
+    - name: Create a partition 
+      parted:
+        device: /dev/sdb
+        number: 1
+        state: present
+        
+    - name: Use block and rescue for research volume group
+      block:
+        - name: Create the volume group research
+          lvg:
+            vg: research
+            pvs: /dev/sdb1
+
+      rescue:
+        - name: Display a message
+          debug:
+            msg: "research vg does not exist"
+
+    - name: Use block and rescue for logical volume 
+      block: 
+        - name: Create the logical volume
+          lvol:
+            vg: research
+            lv: lv_research
+            size: 1500m
+
+      rescue:
+        - name: Display the error message
+          debug:
+            msg: "Could not create logical volume of that size"
+
+        - name: Create the logical volume of 800m instead
+          lvol:
+            vg: research
+            lv: lv_research
+            size: 800m
+
+    - name: Format the logical volume with ext4
+      filesystem:
+        fstype: ext4
+        dev: /dev/research/lv_research
+
+    - name: Create the mount point and mount only on proxy group
+      block:
+        - name: Create the mount point
+          file: 
+            path: /data
+            state: directory
+
+        - name: Mount permanently the filesystem
+          mount:
+            path: /data
+            src: /dev/research/lv_research
+            fstype: ext4
+            state: present
+      when: inventory_hostname in groups['proxy']      
+
+
+
